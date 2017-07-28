@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<script type="text/javascript" src="js/jquery-2.1.0.js" ></script>
+		<script src="js/jquery.easyui.min.js" type="text/javascript" charset="UTF-8"></script>
+		<script src="js/easyui-lang-zh_CN.js" type="text/javascript" charset="utf-8"></script>
+		<link  rel="stylesheet" type="text/css" href="css/themes/default/easyui.css"/>
+	
+	<style type="text/css">
+		html,body{
+			margin: 0;
+			padding: 0;
+		}
+		
+		#north{
+			width:100%;
+			height: 70px;
+		}
+		#west{
+			width: 20%;
+			height: 100%;
+		}
+		#second{
+			width: 100%;
+			height: 99%;
+			border: none;
+		}
+	</style>
+	
+	<script type="text/javascript">
+		
+		$(function(){
+			$("#mytree").tree({
+				onClick:function(node){
+					var isExist=$("#mytab").tabs("exists",node.text);
+					if(isExist==true){
+						$("#mytab").tabs("select",node.text);
+					}else{
+						$("#mytab").tabs("add",{
+						 	title:node.text,
+						 	content:"<iframe id='second' src="+node.attribute.url+"></iframe>",
+						 	closable:true
+						});
+					}	 
+				}
+			});
+		});
+	</script>
+	
+	</head>
+	<body>
+		<div class="easyui-layout" fit=true split=true>
+			<div id="north" region="north" title="north">
+				
+			</div>
+			
+			<div id="west" region="west" title="west" split=true>
+				<div class="easyui-accordion" fit=true >
+					<div id="" title="报表中心">
+						<ul class="easyui-tree" id="mytree">
+							<li><span>材料维修单</span>
+								<ul>
+									<li data-options="attribute:{url:'https://www.baidu.com'}"><span>入库</span></li>
+									<li data-options="attribute:{url:'https://www.souhu.com'}"><span>出库</span></li>
+									<li data-options="attribute:{url:'https://www.xinlang.com'}"><span>报修</span></li>
+									<li data-options="attribute:{url:'second.html'}"><span>登录</span></li>
+								</ul>
+							</li>
+							<li><span>材料报修单</span></li>
+							<li><span>材料入库单</span></li>
+							<li><span>材料出库单</span></li>
+						</ul>
+					</div>
+					
+					<div id="" title="基础设置">
+						
+					</div>
+					
+					<div id="" title="系统设置">
+						呵呵
+					</div>
+				</div>
+			</div>
+			
+			<div id="center" region="center" title="center">
+				<div class="easyui-tabs" fit=true id="mytab">
+					<div id="" title="首页">
+						<iframe src="second.html" id="second"></iframe>
+					</div>
+					
+				</div>
+				
+			</div>
+		</div>
+	</body>
+</html>

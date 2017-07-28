@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script type="text/javascript" src="js/jquery-2.1.0.js" ></script>
+		<script src="js/easyui-lang-zh_CN.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/jquery.easyui.min.js" type="text/javascript" charset="UTF-8"></script>
+		<link  rel="stylesheet" type="text/css" href="css/themes/default/easyui.css"/>
+		<link rel="stylesheet" href="css/themes/icon.css" />
+	
+		<style type="text/css">
+			#myform div {
+				margin: 15px;
+			}
+		</style>
+	
+		<script type="application/javascript">
+		
+			$(function(){
+
+				$('#myGrid').datagrid({   
+					fit:true,			//完全填充的话会让下面的div没有位置放
+				    url:'/EasyUITest/CountryServlet',
+				    columns:[[    
+				        {field:'ID',title:'Id',width:'12%',align:'center'},  
+				        {field:'cid',title:'CID',width:'12%',align:'center'},  
+				        {field:'uid',title:'UID',width:'12%',align:'center'},  
+				        {field:'userName',title:'UserName',width:'12%',align:'center'},  
+				        {field:'rank',title:'Rank',width:'12%',align:'center'},  
+				        {field:'solved',title:'Solved',width:'12%',align:'center'},
+				        {field:'penalty',title:'Penalty',width:'12%',align:'center'},
+				        {field:'submissions',title:'Submissions',width:'16%',align:'center'}
+				    ]],
+				    toolbar:'#mytool',
+				 	pagination:true,
+				 	striped:true
+				});  
+				
+				/*$("#pp").pagination({
+					total:2000,
+					pageSize:10,
+					buttons: [{
+							iconCls:'icon-add',
+							handler:function(){alert('add')}
+						},'-',{
+							iconCls:'icon-save',
+							handler:function(){alert('save')}
+						}]
+				});*/
+		
+
+				$("#addBtn").click(function() {
+					$("#mydialog").dialog({
+						title: '添加',
+						width: 400,
+						height: 200,
+						resizable: true,
+						modal: true
+					})
+				});
+
+				$.extend($.fn.validatebox.defaults.rules, {
+					varname: {
+						validator: function(value, param) {
+							/*正则表达式*/
+							var reg = /^[\u4e00-\u9fa5]+$/;
+							var isOk = reg.test(value);
+							return isOk;
+						},
+						message: '请输入汉字'
+					}
+				});
+
+				$("#submitBtn").click(function(){
+					$("#myform").form('submit',{
+						url:"/EasyUITest/UpdateServlet",			
+						success:function(data){
+							 var msg=$.parseJSON(data); 
+							if (msg.status=="success"){
+								$.messager.alert('提示',msg.status,'info',function(){
+									$("#myGrid").datagrid("reload");
+									$("#mydialog").dialog("close");
+									$("#myform").form("clear");
+								});
+							}else{
+								$.messager.alert('警告','发生错误');
+							}
+						}
+												
+						
+					});
+				});
+			
+				
+		});
+			
+		</script>
+	</head>
+	<body>
+		
+		<div id="myGrid" style="width: 60%;height: 50%;">
+							
+		</div>
+		<div id="mytool">
+			<a id="addBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-add'">添加</a>
+			<a id="removeBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-remove'">移除</a>
+			<a id="editBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-edit'">修改</a>
+			<a id="saveBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save'">保存</a>
+		</div>
+		<div id="mydialog">
+			<form id="myform">
+				<div>
+					<tr>
+						<td>邮箱：</td>
+						<td><input  name="email" class="easyui-textbox" data-options="iconCls:'icon-search',required:true,validType:'email'" style="width:300px"> </td>
+					</tr>
+				</div>
+				<div>
+					<tr>
+						<td>用户名：</td>
+						<td><input  name="userName" class="easyui-textbox" data-options="iconCls:'icon-man',required:true,validType:'varname'" style="width:300px"> </td>
+					</tr>
+				</div>
+				<div>
+					<tr>
+						<td>密码：</td>
+						<td><input name="password" class="easyui-textbox" data-options="iconCls:'icon-lock'" style="width:300px"> </td>
+					</tr>
+				</div>
+
+				<div>
+					<a id="submitBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-ok'">提交</a>
+				</div>
+
+			</form>
+
+		</div>
+		<!--<div id="pp" style="background:#efefef;border:1px solid #ccc;">
+			
+		</div> -->
+	</body>
+</html>
